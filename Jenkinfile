@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+  environment {
+  TARGET = 'test-server'
+  USERNAME = 'rani1997'
+  PASSWORD = 'Ranikanukuntla1'
+  ENVIRONMENT = 'Sandbox'
+  TARGETTYPE = 'server'
+  
+  }
+  stages {
+      stage('checkout SCM') {
+  steps {
+  git url: 'https://github.com/rani5566/helloworld',
+  branch: 'main'
+  }
+      }
+  stage('Build') {
+  steps {
+  bat 'mvn -B -U -e -V clean -DskipTests package'
+  }
+  }
+  stage('Test') {
+  steps {
+  echo 'munit test cases skipped'       
+  }
+  }
+  stage('Deployment')
+  {
+      steps{
+          bat 'mvn -U -V -e -B -DskipTests deploy -DmuleDeploy -Dtarget=%TARGET% -Dtarget.type=%TARGETTYPE% -Dusername=%USERNAME% -Dpassword=%PASSWORD% -Denvironment=%ENVIRONMENT%'
+      }
+  }
+}
+}
